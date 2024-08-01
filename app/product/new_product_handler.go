@@ -3,6 +3,8 @@ package product
 import (
 	"net/http"
 
+	"github.com/google/uuid"
+
 	"github.com/themethaithian/go-pos-system/app"
 )
 
@@ -20,6 +22,13 @@ func (h *handler) NewProduct(ctx app.Context) {
 
 	if err := h.validator.Struct(newProductReq); err != nil {
 		ctx.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	id := uuid.New().String()
+
+	if err := h.storage.InsertProduct(id, newProductReq); err != nil {
+		ctx.JSON(http.StatusInternalServerError, err)
 		return
 	}
 

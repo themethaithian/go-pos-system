@@ -23,7 +23,8 @@ func main() {
 	postgres := database.NewPostgres()
 	validator := validator.New()
 
-	productHandler := product.NewHandler(postgres, validator)
+	productStorage := product.NewStorage(postgres)
+	productHandler := product.NewHandler(productStorage, validator)
 
 	router.POST("/add-product", productHandler.NewProduct)
 
