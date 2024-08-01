@@ -25,7 +25,7 @@ func (c *contextHTTP) JSON(statusCode int, v any) {
 	switch v := v.(type) {
 	case error:
 		jsonErr := json.NewEncoder(c.w).Encode(Response{
-			Status:  "SUCCESS",
+			Status:  "FAILED",
 			Message: v.Error(),
 		})
 		_ = jsonErr
@@ -34,7 +34,7 @@ func (c *contextHTTP) JSON(statusCode int, v any) {
 	}
 
 	err := json.NewEncoder(c.w).Encode(Response{
-		Status: "FAILED",
+		Status: "SUCCESS",
 		Data:   v,
 	})
 	_ = err

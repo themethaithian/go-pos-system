@@ -8,7 +8,11 @@ import (
 )
 
 type config struct {
-	Port string `env:"PORT"`
+	Port       string `env:"PORT"`
+	DBHost     string `env:"DBHOST"`
+	DBPort     string `env:"DBPORT"`
+	DBUser     string `env:"DBUSER"`
+	DBPassword string `env:"DBPASSWORD"`
 }
 
 var (

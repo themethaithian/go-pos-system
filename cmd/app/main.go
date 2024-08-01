@@ -9,12 +9,23 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/go-playground/validator/v10"
+
 	"github.com/themethaithian/go-pos-system/app"
+	"github.com/themethaithian/go-pos-system/app/product"
 	"github.com/themethaithian/go-pos-system/config"
+	"github.com/themethaithian/go-pos-system/database"
 )
 
 func main() {
 	router := app.NewRouterHTTP()
+
+	postgres := database.NewPostgres()
+	validator := validator.New()
+
+	productHandler := product.NewHandler(postgres, validator)
+
+	router.POST("/add-product", productHandler.NewProduct)
 
 	server := http.Server{
 		Addr:    ":" + config.Val.Port,
