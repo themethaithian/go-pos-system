@@ -40,6 +40,10 @@ func (c *contextHTTP) JSON(statusCode int, v any) {
 	_ = err
 }
 
+func (c *contextHTTP) PathValue(v string) string {
+	return c.r.PathValue(v)
+}
+
 type RouterHTTP struct {
 	mux          *http.ServeMux
 	interceptors []middlewareFunc

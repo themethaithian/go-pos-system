@@ -8,6 +8,7 @@ import (
 
 type Handler interface {
 	NewProduct(ctx app.Context)
+	EditProduct(ctx app.Context)
 }
 
 type handler struct {

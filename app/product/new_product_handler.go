@@ -8,13 +8,13 @@ import (
 	"github.com/themethaithian/go-pos-system/app"
 )
 
-type NewProductRequest struct {
+type NewProduct struct {
 	Name        string  `json:"name" validate:"required"`
 	Description *string `json:"description"`
 }
 
 func (h *handler) NewProduct(ctx app.Context) {
-	var newProductReq NewProductRequest
+	var newProductReq NewProduct
 	if err := ctx.Bind(&newProductReq); err != nil {
 		ctx.JSON(http.StatusBadRequest, err)
 		return

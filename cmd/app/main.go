@@ -27,6 +27,7 @@ func main() {
 	productHandler := product.NewHandler(productStorage, validator)
 
 	router.POST("/add-product", productHandler.NewProduct)
+	router.POST("/edit-product/{id}", productHandler.EditProduct)
 
 	server := http.Server{
 		Addr:    ":" + config.Val.Port,
