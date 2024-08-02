@@ -2,8 +2,12 @@ package user
 
 type Handler interface{}
 
-type handler struct{}
+type handler struct {
+	storage Storage
+}
 
-func NewHandler() Handler {
-	return &handler{}
+func NewHandler(storage Storage) Handler {
+	return &handler{
+		storage: storage,
+	}
 }

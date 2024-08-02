@@ -15,10 +15,15 @@ import (
 	"github.com/themethaithian/go-pos-system/app/product"
 	"github.com/themethaithian/go-pos-system/config"
 	"github.com/themethaithian/go-pos-system/database"
+	"github.com/themethaithian/go-pos-system/middleware"
 )
 
 func main() {
 	router := app.NewRouterHTTP()
+
+	mdw := middleware.New()
+
+	router.Use(mdw.VerifyToken)
 
 	postgres := database.NewPostgres()
 	validator := validator.New()

@@ -3,16 +3,14 @@ package product
 import (
 	"net/http"
 
-	"github.com/shopspring/decimal"
-
 	"github.com/themethaithian/go-pos-system/app"
 )
 
 type EditProduct struct {
-	Name        *string          `json:"name"`
-	Description *string          `json:"description"`
-	Price       *decimal.Decimal `json:"price"`
-	Quantity    *int             `json:"quantity"`
+	Name        *string  `json:"name"`
+	Description *string  `json:"description"`
+	Price       *float32 `json:"price"`
+	Quantity    *int     `json:"quantity"`
 }
 
 func (h *handler) EditProduct(ctx app.Context) {

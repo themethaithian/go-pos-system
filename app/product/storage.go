@@ -27,8 +27,8 @@ func (s *storage) InsertProduct(id string, newProduct NewProduct) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	sql := `INSERT INTO tbl_product(id, name, description) VALUES($1, $2, $3)`
-	_, err := s.db.ExecContext(ctx, sql, id, newProduct.Name, newProduct.Description)
+	sql := `INSERT INTO tbl_product(id, name, description, price) VALUES($1, $2, $3, $4)`
+	_, err := s.db.ExecContext(ctx, sql, id, newProduct.Name, newProduct.Description, newProduct.Price)
 	if err != nil {
 		return errors.Wrapf(err, fmt.Sprintf("cannot insert product: %s", newProduct.Name))
 	}

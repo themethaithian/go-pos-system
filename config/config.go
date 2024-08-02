@@ -13,6 +13,8 @@ type config struct {
 	DBPort     string `env:"DBPORT"`
 	DBUser     string `env:"DBUSER"`
 	DBPassword string `env:"DBPASSWORD"`
+	NeedAuthen bool   `env:"NEEDAUTHEN"`
+	JWTSecret  string `env:"JWTSECRET"`
 }
 
 var (

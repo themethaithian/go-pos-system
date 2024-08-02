@@ -1,13 +1,9 @@
 package product
 
-import (
-	"github.com/shopspring/decimal"
-)
-
 type Product struct {
 	ID          string
 	Name        string
 	Description *string
-	Price       decimal.Decimal
+	Price       float32
 	Quantity    int
 }
