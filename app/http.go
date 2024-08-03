@@ -25,7 +25,7 @@ func (c *contextHTTP) JSON(statusCode int, v any) {
 	switch v := v.(type) {
 	case error:
 		jsonErr := json.NewEncoder(c.w).Encode(Response{
-			Status:  "FAILED",
+			Status:  FAILED,
 			Message: v.Error(),
 		})
 		_ = jsonErr
@@ -34,14 +34,14 @@ func (c *contextHTTP) JSON(statusCode int, v any) {
 	}
 
 	err := json.NewEncoder(c.w).Encode(Response{
-		Status: "SUCCESS",
+		Status: SUCCESS,
 		Data:   v,
 	})
 	_ = err
 }
 
-func (c *contextHTTP) PathValue(v string) string {
-	return c.r.PathValue(v)
+func (c *contextHTTP) Value(key string) string {
+	return c.r.Header.Get(key)
 }
 
 type RouterHTTP struct {
@@ -53,7 +53,7 @@ func NewRouterHTTP() *RouterHTTP {
 	return &RouterHTTP{mux: http.NewServeMux()}
 }
 
-type middlewareFunc func(h http.Handler) http.Handler
+type middlewareFunc func(next HandlerFunc) HandlerFunc
 
 func (router *RouterHTTP) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	router.mux.ServeHTTP(w, r)
@@ -72,16 +72,15 @@ func (router *RouterHTTP) POST(path string, handlerFn HandlerFunc) {
 }
 
 func NewHTTPHandler(method string, handler func(Context), interceptors []middlewareFunc) http.Handler {
-	var httpHandler http.Handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	for i := len(interceptors) - 1; i >= 0; i-- {
+		handler = interceptors[i](handler)
+	}
+
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if method != r.Method {
 			w.WriteHeader(http.StatusMethodNotAllowed)
 			return
 		}
 		handler(&contextHTTP{w: w, r: r})
 	})
-
-	for _, interceptor := range interceptors {
-		httpHandler = interceptor(http.Handler(httpHandler))
-	}
-	return httpHandler
 }

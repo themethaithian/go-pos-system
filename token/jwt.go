@@ -1,4 +1,4 @@
-package authen
+package token
 
 import (
 	"fmt"
@@ -11,17 +11,17 @@ import (
 )
 
 type AccessTokenClaims struct {
-	UserID string `json:"user_id"`
-	Role   string `json:"role"`
+	Username string `json:"username"`
+	Role     string `json:"role"`
 	jwt.RegisteredClaims
 }
 
-func CreateJWT(userID string, role string) (string, error) {
+func CreateJWT(username string, role string) (string, error) {
 	expirationTime := time.Now().Add(15 * time.Minute)
 
 	claims := AccessTokenClaims{
-		UserID: userID,
-		Role:   role,
+		Username: username,
+		Role:     role,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 		},
@@ -29,7 +29,7 @@ func CreateJWT(userID string, role string) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	tokenString, err := token.SignedString(config.Val.JWTSecret)
+	tokenString, err := token.SignedString([]byte(config.Val.JWTSecret))
 	if err != nil {
 		return "", errors.Wrapf(err, "failed to sign token")
 	}
@@ -41,7 +41,7 @@ func VerifyToken(tokenString string) (*AccessTokenClaims, error) {
 	claims := &AccessTokenClaims{}
 
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(t *jwt.Token) (interface{}, error) {
-		return config.Val.JWTSecret, nil
+		return []byte(config.Val.JWTSecret), nil
 	})
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to parse token")

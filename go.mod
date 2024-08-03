@@ -2,10 +2,7 @@ module github.com/themethaithian/go-pos-system
 
 go 1.22.3
 
-require (
-	github.com/caarlos0/env/v10 v10.0.0
-	github.com/shopspring/decimal v1.4.0
-)
+require github.com/caarlos0/env/v10 v10.0.0
 
 require (
 	github.com/go-playground/validator/v10 v10.22.0

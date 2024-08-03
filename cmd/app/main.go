@@ -12,6 +12,7 @@ import (
 	"github.com/go-playground/validator/v10"
 
 	"github.com/themethaithian/go-pos-system/app"
+	"github.com/themethaithian/go-pos-system/app/authen"
 	"github.com/themethaithian/go-pos-system/app/product"
 	"github.com/themethaithian/go-pos-system/config"
 	"github.com/themethaithian/go-pos-system/database"
@@ -21,12 +22,16 @@ import (
 func main() {
 	router := app.NewRouterHTTP()
 
-	mdw := middleware.New()
-
-	router.Use(mdw.VerifyToken)
-
 	postgres := database.NewPostgres()
 	validator := validator.New()
+
+	authenStorage := authen.NewStorage(postgres)
+	authenHandler := authen.NewHandler(authenStorage)
+
+	router.POST("/login", authenHandler.Login)
+
+	mdw := middleware.New()
+	router.Use(mdw.VerifyToken)
 
 	productStorage := product.NewStorage(postgres)
 	productHandler := product.NewHandler(productStorage, validator)

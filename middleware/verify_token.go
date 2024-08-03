@@ -1,36 +1,40 @@
 package middleware
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
-	"github.com/themethaithian/go-pos-system/authen"
+	"github.com/pkg/errors"
+
+	"github.com/themethaithian/go-pos-system/app"
 	"github.com/themethaithian/go-pos-system/config"
+	"github.com/themethaithian/go-pos-system/token"
 )
 
-func (mdw *middleware) VerifyToken(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+func (mdw *middleware) VerifyToken(next app.HandlerFunc) app.HandlerFunc {
+	return func(ctx app.Context) {
 		if config.Val.NeedAuthen {
-			authHeader := r.Header.Get("Authorization")
+			authHeader := ctx.Value("Authorization")
 			if authHeader == "" {
-				http.Error(w, "authorization header is missing", http.StatusUnauthorized)
+				ctx.JSON(http.StatusUnauthorized, fmt.Errorf("authorization header not found"))
 				return
 			}
 
 			if !strings.HasPrefix(authHeader, "Bearer ") {
-				http.Error(w, "invalid authorization header format", http.StatusUnauthorized)
+				ctx.JSON(http.StatusUnauthorized, fmt.Errorf("invalid authorization header"))
 				return
 			}
 
 			tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 
-			_, err := authen.VerifyToken(tokenString)
+			_, err := token.VerifyToken(tokenString)
 			if err != nil {
-				http.Error(w, err.Error(), http.StatusUnauthorized)
+				ctx.JSON(http.StatusUnauthorized, errors.Wrapf(err, "failed to verify token"))
 				return
 			}
 		}
 
-		next.ServeHTTP(w, r)
-	})
+		next(ctx)
+	}
 }

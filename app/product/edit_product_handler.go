@@ -20,7 +20,7 @@ func (h *handler) EditProduct(ctx app.Context) {
 		return
 	}
 
-	id := ctx.PathValue("id")
+	id := ctx.Param("id")
 
 	err := h.storage.UpdateProduct(id, editProduct)
 	if err != nil {

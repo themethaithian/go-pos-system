@@ -1,9 +1,11 @@
 package middleware
 
-import "net/http"
+import (
+	"github.com/themethaithian/go-pos-system/app"
+)
 
 type Middleware interface {
-	VerifyToken(handler http.Handler) http.Handler
+	VerifyToken(next app.HandlerFunc) app.HandlerFunc
 }
 
 type middleware struct{}
