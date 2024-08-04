@@ -1,17 +1,24 @@
 package authen
 
-import "github.com/themethaithian/go-pos-system/app"
+import (
+	"github.com/go-playground/validator/v10"
+
+	"github.com/themethaithian/go-pos-system/app"
+)
 
 type Handler interface {
 	Login(ctx app.Context)
+	Register(ctx app.Context)
 }
 
 type handler struct {
-	storage Storage
+	validator *validator.Validate
+	storage   Storage
 }
 
-func NewHandler(storage Storage) Handler {
+func NewHandler(validator *validator.Validate, storage Storage) Handler {
 	return &handler{
-		storage: storage,
+		validator: validator,
+		storage:   storage,
 	}
 }

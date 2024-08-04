@@ -21,6 +21,11 @@ func (h *handler) Login(ctx app.Context) {
 		return
 	}
 
+	if err := h.validator.Struct(login); err != nil {
+		ctx.JSON(http.StatusBadRequest, err)
+		return
+	}
+
 	role := "ADMIN"
 
 	var res LoginResponse

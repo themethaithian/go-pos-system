@@ -26,9 +26,10 @@ func main() {
 	validator := validator.New()
 
 	authenStorage := authen.NewStorage(postgres)
-	authenHandler := authen.NewHandler(authenStorage)
+	authenHandler := authen.NewHandler(validator, authenStorage)
 
 	router.POST("/login", authenHandler.Login)
+	router.POST("/register", authenHandler.Register)
 
 	mdw := middleware.New()
 	router.Use(mdw.VerifyToken)
