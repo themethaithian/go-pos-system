@@ -13,9 +13,10 @@ import (
 
 	"github.com/themethaithian/go-pos-system/app"
 	"github.com/themethaithian/go-pos-system/app/authen"
-	"github.com/themethaithian/go-pos-system/app/product"
+	"github.com/themethaithian/go-pos-system/app/user"
 	"github.com/themethaithian/go-pos-system/config"
 	"github.com/themethaithian/go-pos-system/database"
+	"github.com/themethaithian/go-pos-system/hashing"
 	"github.com/themethaithian/go-pos-system/middleware"
 )
 
@@ -24,21 +25,20 @@ func main() {
 
 	postgres := database.NewPostgres()
 	validator := validator.New()
+	hashing := hashing.NewHashing()
 
 	authenStorage := authen.NewStorage(postgres)
 	authenHandler := authen.NewHandler(validator, authenStorage)
 
-	router.POST("/login", authenHandler.Login)
-	router.POST("/register", authenHandler.Register)
+	router.POST("/api/v1/login", authenHandler.Login)
 
 	mdw := middleware.New()
 	router.Use(mdw.VerifyToken)
 
-	productStorage := product.NewStorage(postgres)
-	productHandler := product.NewHandler(productStorage, validator)
+	userStorage := user.NewStorage(postgres)
+	userHandler := user.NewHandler(validator, hashing, userStorage)
 
-	router.POST("/add-product", productHandler.NewProduct)
-	router.POST("/edit-product/{id}", productHandler.EditProduct)
+	router.POST("/api/v1/users", userHandler.CreateUser)
 
 	server := http.Server{
 		Addr:    ":" + config.Val.Port,

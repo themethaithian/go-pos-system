@@ -12,13 +12,15 @@ type Handler interface {
 }
 
 type handler struct {
-	validator validator.Validate
+	validator *validator.Validate
 	hashing   hashing.Hashing
 	storage   Storage
 }
 
-func NewHandler(storage Storage) Handler {
+func NewHandler(validator *validator.Validate, hashing hashing.Hashing, storage Storage) Handler {
 	return &handler{
-		storage: storage,
+		validator: validator,
+		hashing:   hashing,
+		storage:   storage,
 	}
 }

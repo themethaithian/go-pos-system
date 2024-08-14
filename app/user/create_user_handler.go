@@ -49,7 +49,11 @@ func (h *handler) CreateUser(ctx app.Context) {
 		return
 	}
 
-	user := mappingUser(request)
+	user, err := h.mappingUser(request)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
 
 	if err := h.storage.InsertNewUser(user); err != nil {
 		ctx.JSON(http.StatusInternalServerError, err)
@@ -59,12 +63,17 @@ func (h *handler) CreateUser(ctx app.Context) {
 	ctx.JSON(http.StatusOK, nil)
 }
 
-func mappingUser(request NewUser) User {
+func (h *handler) mappingUser(request NewUser) (User, error) {
+	passwordHash, err := h.hashing.HashPassword(request.Password)
+	if err != nil {
+		return User{}, fmt.Errorf("failed to hash password: %v", err)
+	}
+
 	return User{
 		Username:     request.Username,
-		PasswordHash: "",
+		PasswordHash: passwordHash,
 		Role:         request.Role,
 		CreatedAt:    time.Now(),
 		UpdatedAt:    time.Now(),
-	}
+	}, nil
 }
