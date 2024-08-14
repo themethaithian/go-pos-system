@@ -1,0 +1,9 @@
+CREATE TABLE "tbl_transaction" (
+  "id" SERIAL PRIMARY KEY,
+  "user_id" INTEGER NOT NULL,
+  "total_amount" DECIMAL(10, 2) NOT NULL,
+  "discount" DECIMAL(10, 2) NOT NULL,
+  "tax" DECIMAL(10, 2) NOT NULL,
+  "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updated_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
