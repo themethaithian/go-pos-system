@@ -3,5 +3,6 @@ CREATE TABLE "tbl_inventory_log" (
   "product_id" INTEGER NOT NULL,
   "change_quantity" INTEGER NOT NULL,
   "reason" VARCHAR,
-
+  "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updated_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
