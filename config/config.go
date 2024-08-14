@@ -8,13 +8,16 @@ import (
 )
 
 type config struct {
-	Port       string `env:"PORT"`
-	DBHost     string `env:"DBHOST"`
-	DBPort     string `env:"DBPORT"`
-	DBUser     string `env:"DBUSER"`
-	DBPassword string `env:"DBPASSWORD"`
-	NeedAuthen bool   `env:"NEEDAUTHEN"`
-	JWTSecret  string `env:"JWTSECRET"`
+	Port          string `env:"PORT"`
+	DBHost        string `env:"DBHOST"`
+	DBPort        string `env:"DBPORT"`
+	DBUser        string `env:"DBUSER"`
+	DBPassword    string `env:"DBPASSWORD"`
+	NeedAuthen    bool   `env:"NEEDAUTHEN"`
+	JWTSecret     string `env:"JWTSECRET"`
+	RedisAddr     string `env:"REDISADDR"`
+	RedisPassword string `env:"REDISPASSWORD"`
+	RedisDB       int    `env:"REDISDB"`
 }
 
 var (
