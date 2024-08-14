@@ -2,14 +2,9 @@ package product
 
 import (
 	"github.com/go-playground/validator/v10"
-
-	"github.com/themethaithian/go-pos-system/app"
 )
 
-type Handler interface {
-	NewProduct(ctx app.Context)
-	EditProduct(ctx app.Context)
-}
+type Handler interface{}
 
 type handler struct {
 	validator *validator.Validate

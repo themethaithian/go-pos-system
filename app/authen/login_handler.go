@@ -26,7 +26,7 @@ func (h *handler) Login(ctx app.Context) {
 		return
 	}
 
-	role := "ADMIN"
+	role := "ADMIN" // TODO: get role from tbl_user
 
 	var res LoginResponse
 

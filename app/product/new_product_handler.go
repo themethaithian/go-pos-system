@@ -9,9 +9,6 @@ import (
 )
 
 type NewProduct struct {
-	Name        string  `json:"name" validate:"required"`
-	Description *string `json:"description"`
-	Price       float32 `json:"price" validate:"required,gte=0"`
 }
 
 func (h *handler) NewProduct(ctx app.Context) {
@@ -26,9 +23,7 @@ func (h *handler) NewProduct(ctx app.Context) {
 		return
 	}
 
-	id := uuid.New().String()
-
-	if err := h.storage.InsertProduct(id, newProduct); err != nil {
+	if err := h.storage.InsertProduct(); err != nil {
 		ctx.JSON(http.StatusInternalServerError, err)
 		return
 	}

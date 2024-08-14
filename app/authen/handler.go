@@ -8,7 +8,6 @@ import (
 
 type Handler interface {
 	Login(ctx app.Context)
-	Register(ctx app.Context)
 }
 
 type handler struct {
