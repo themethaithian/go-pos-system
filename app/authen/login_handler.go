@@ -14,29 +14,33 @@ type Login struct {
 }
 
 func (h *handler) Login(ctx app.Context) {
-	var login Login
+	var request Login
 
-	if err := ctx.Bind(&login); err != nil {
+	if err := ctx.Bind(&request); err != nil {
 		ctx.JSON(http.StatusBadRequest, fmt.Errorf("incorrect username or password"))
 		return
 	}
 
-	if err := h.validator.Struct(login); err != nil {
+	if err := h.validator.Struct(request); err != nil {
 		ctx.JSON(http.StatusBadRequest, err)
 		return
 	}
 
-	role := "ADMIN" // TODO: get role from tbl_user
-
-	var res LoginResponse
-
-	accessToken, err := token.CreateJWT(login.Username, role)
+	role, err := h.storage.RetrieveRoleFromUsername(request.Username)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, err)
 		return
 	}
 
-	res.AccessToken = accessToken
+	var response LoginResponse
 
-	ctx.JSON(http.StatusOK, res)
+	accessToken, err := token.CreateJWT(request.Username, role)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	response.AccessToken = accessToken
+
+	ctx.JSON(http.StatusOK, response)
 }
