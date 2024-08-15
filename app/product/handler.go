@@ -18,9 +18,9 @@ type handler struct {
 	storage   Storage
 }
 
-func NewHandler(storage Storage, validator *validator.Validate) Handler {
+func NewHandler(validator *validator.Validate, storage Storage) Handler {
 	return &handler{
-		storage:   storage,
 		validator: validator,
+		storage:   storage,
 	}
 }

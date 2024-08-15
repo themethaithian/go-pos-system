@@ -13,6 +13,7 @@ import (
 
 	"github.com/themethaithian/go-pos-system/app"
 	"github.com/themethaithian/go-pos-system/app/authen"
+	"github.com/themethaithian/go-pos-system/app/product"
 	"github.com/themethaithian/go-pos-system/app/user"
 	"github.com/themethaithian/go-pos-system/config"
 	"github.com/themethaithian/go-pos-system/database"
@@ -38,7 +39,12 @@ func main() {
 	userStorage := user.NewStorage(postgres)
 	userHandler := user.NewHandler(validator, hashing, userStorage)
 
-	router.POST("/api/v1/users", userHandler.CreateUser)
+	router.POST("/api/v1/create-user", userHandler.CreateUser)
+
+	productStorage := product.NewStorage(postgres)
+	productHandler := product.NewHandler(validator, productStorage)
+
+	router.POST("/api/v1/products", productHandler.ListAllProducts)
 
 	server := http.Server{
 		Addr:    ":" + config.Val.Port,
