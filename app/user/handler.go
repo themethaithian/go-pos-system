@@ -9,6 +9,7 @@ import (
 
 type Handler interface {
 	CreateUser(ctx app.Context)
+	AssignRole(ctx app.Context)
 }
 
 type handler struct {
